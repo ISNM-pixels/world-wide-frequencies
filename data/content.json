@@ -1,0 +1,193 @@
+{
+  "site": {
+    "brand": "Obsidian Pulse",
+    "email": "info@obsidianpulse.com",
+    "tagline": "Architects of the modern soundscape.",
+    "copyright": "(c) 2024 Obsidian Pulse Records. All rights reserved.",
+    "hero": {
+      "eyebrow": "New Era",
+      "title": "The Sound<br>Of The Future",
+      "copy": "Pushing the boundaries of electronic music. We amplify the underground, curating visceral audio experiences for the discerning listener.",
+      "image": "assets/images/hero-pulse.svg",
+      "imageAlt": "Electronic concert crowd with purple lasers"
+    },
+    "home": {
+      "releaseSubtitle": "Latest transmissions from the void.",
+      "rosterTitle": "The Roster"
+    },
+    "contact": {
+      "title": "Transmit.",
+      "networkTitle": "Network",
+      "note": "For demo submissions, please use the form provided. Send private Soundcloud links only. Do not attach audio files directly."
+    },
+    "socials": [
+      { "label": "Instagram", "url": "#" },
+      { "label": "Soundcloud", "url": "#" },
+      { "label": "Resident Advisor", "url": "#" },
+      { "label": "Newsletter Signup", "url": "#" }
+    ],
+    "legal": [
+      { "label": "Privacy Policy", "url": "#" },
+      { "label": "Terms of Service", "url": "#" }
+    ]
+  },
+  "artists": [
+    {
+      "id": "voidwalker",
+      "name": "Voidwalker",
+      "genre": "Techno / Industrial",
+      "chip": "Industrial Techno",
+      "image": "assets/images/artist-voidwalker.svg",
+      "imageAlt": "Voidwalker artist portrait",
+      "description": "A pressure-built techno architect with an industrial pulse.",
+      "joinedAt": "2026-05-18"
+    },
+    {
+      "id": "kinetic",
+      "name": "Kinetic",
+      "genre": "Bass / Experimental",
+      "chip": "Experimental Bass",
+      "image": "assets/images/artist-kinetic.svg",
+      "imageAlt": "Kinetic artist portrait",
+      "description": "Low-end experiments, fractured drums, and sharp system pressure.",
+      "joinedAt": "2026-04-28"
+    },
+    {
+      "id": "enigma",
+      "name": "Enigma",
+      "genre": "Ambient / Drone",
+      "chip": "Ambient / Drone",
+      "image": "assets/images/artist-enigma.svg",
+      "imageAlt": "Enigma artist portrait",
+      "description": "A slow-burn ambient voice with deep negative space.",
+      "joinedAt": "2026-04-02"
+    },
+    {
+      "id": "pulse-rate",
+      "name": "Pulse_Rate",
+      "genre": "Neurofunk / IDM",
+      "chip": "Neurofunk / IDM",
+      "image": "assets/images/artist-pulse-rate.svg",
+      "imageAlt": "Pulse Rate artist portrait",
+      "description": "Fast edits, restless synthesis, and machine-cut grooves.",
+      "joinedAt": "2026-03-14"
+    },
+    {
+      "id": "binary-phase",
+      "name": "Binary Phase",
+      "genre": "Live Hardware",
+      "chip": "Live Hardware",
+      "image": "assets/images/artist-binary-phase.svg",
+      "imageAlt": "Binary Phase artist portrait",
+      "description": "A brutalist hardware duo built for warehouse sound systems.",
+      "joinedAt": "2026-02-20",
+      "wide": true
+    },
+    {
+      "id": "nexus",
+      "name": "NEXUS",
+      "genre": "Deep Tech",
+      "chip": "Deep Tech",
+      "image": "assets/images/artist-nexus.svg",
+      "imageAlt": "Nexus artist portrait",
+      "description": "Minimal deep tech with a polished nocturnal edge.",
+      "joinedAt": "2026-01-08"
+    }
+  ],
+  "albums": [
+    {
+      "id": "synaptic-echoes",
+      "title": "Synaptic Echoes",
+      "artist": "Voidwalker",
+      "type": "album",
+      "label": "LP",
+      "status": "Out Now",
+      "releaseDate": "2026-05-22",
+      "cover": "assets/images/album-synaptic-echoes.svg",
+      "coverAlt": "Synaptic Echoes album artwork",
+      "tracks": [
+        { "title": "Synaptic Echoes", "duration": "4:23" },
+        { "title": "Glass Circuit", "duration": "5:02" },
+        { "title": "Blackout Signal", "duration": "6:11" }
+      ]
+    },
+    {
+      "id": "fracture-point",
+      "title": "Fracture Point",
+      "artist": "Kinetic",
+      "type": "single",
+      "label": "Single",
+      "status": "Out Now",
+      "releaseDate": "2026-05-10",
+      "cover": "assets/images/album-fracture-point.svg",
+      "coverAlt": "Fracture Point album artwork",
+      "tracks": [
+        { "title": "Fracture Point", "duration": "3:48" },
+        { "title": "Impact Tool", "duration": "4:16" }
+      ]
+    },
+    {
+      "id": "null-state",
+      "title": "Null State",
+      "artist": "Enigma",
+      "type": "album",
+      "label": "Album",
+      "status": "Out Now",
+      "releaseDate": "2026-04-19",
+      "cover": "assets/images/album-null-state.svg",
+      "coverAlt": "Null State album artwork",
+      "tracks": [
+        { "title": "Null State", "duration": "7:14" },
+        { "title": "Vacuum Memory", "duration": "5:58" },
+        { "title": "Cold Drift", "duration": "6:31" }
+      ]
+    },
+    {
+      "id": "void-protocol",
+      "title": "Void Protocol",
+      "artist": "Kryptic",
+      "type": "album",
+      "label": "Album",
+      "status": "Archive",
+      "releaseDate": "2026-03-31",
+      "cover": "assets/images/album-void-protocol.svg",
+      "coverAlt": "Void Protocol artwork",
+      "tracks": [
+        { "title": "Void Protocol", "duration": "5:40" },
+        { "title": "Subroutine", "duration": "4:44" }
+      ]
+    },
+    {
+      "id": "neural-mesh",
+      "title": "Neural Mesh",
+      "artist": "Syndicate",
+      "type": "single",
+      "label": "Single",
+      "status": "Archive",
+      "releaseDate": "2026-03-12",
+      "cover": "assets/images/album-neural-mesh.svg",
+      "coverAlt": "Neural Mesh artwork",
+      "tracks": [
+        { "title": "Neural Mesh", "duration": "4:05" }
+      ]
+    },
+    {
+      "id": "phase-shift",
+      "title": "Phase Shift",
+      "artist": "Kryptic",
+      "type": "single",
+      "label": "Single",
+      "status": "Archive",
+      "releaseDate": "2026-02-26",
+      "cover": "assets/images/album-phase-shift.svg",
+      "coverAlt": "Phase Shift artwork",
+      "tracks": [
+        { "title": "Phase Shift", "duration": "4:52" }
+      ]
+    }
+  ],
+  "player": {
+    "albumId": "synaptic-echoes",
+    "trackTitle": "Synaptic Echoes"
+  }
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Obsidian Pulse - Releases</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="releases">
+    <div class="site-shell">
+      <nav class="site-nav">
+        <div class="container nav-inner">
+          <a class="brand" href="index.html"><span class="material-symbols-outlined fill">graphic_eq</span> <span data-site-brand>Obsidian Pulse</span></a>
+          <div class="nav-links" aria-label="Primary navigation">
+            <a href="artists.html">Artists</a>
+            <a class="active" href="releases.html">Releases</a>
+            <a href="contact.html">Contact</a>
+          </div>
+          <div class="nav-actions">
+            <a class="nav-action" href="contact.html">Submit Demo</a>
+            <button class="icon-button menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle><span class="material-symbols-outlined">menu</span></button>
+          </div>
+        </div>
+        <div class="mobile-panel" data-mobile-menu>
+          <div class="container">
+            <a href="artists.html">Artists</a>
+            <a href="releases.html">Releases</a>
+            <a href="contact.html">Contact</a>
+            <a href="contact.html">Submit Demo</a>
+          </div>
+        </div>
+      </nav>
+
+      <main class="main page-main">
+        <div class="container">
+          <header class="page-header catalog-header">
+            <div>
+              <h1 class="page-title">Catalog</h1>
+              <p class="page-copy">The definitive archive of subterranean frequencies.</p>
+            </div>
+            <div class="filters" aria-label="Release filters">
+              <button class="filter-button active" type="button" data-release-filter="all">All</button>
+              <button class="filter-button" type="button" data-release-filter="album">Albums</button>
+              <button class="filter-button" type="button" data-release-filter="single">Singles</button>
+            </div>
+          </header>
+
+          <section class="catalog-grid" aria-label="Release catalog" data-releases-grid></section>
+        </div>
+      </main>
+
+      <footer class="site-footer" data-footer></footer>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
