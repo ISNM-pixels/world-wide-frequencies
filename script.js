@@ -1,4 +1,4 @@
-const contentUrl = "data/content.json";
+const contentUrl = "/data/content.json";
 
 const state = {
   content: null,
@@ -48,6 +48,25 @@ const getSortedArtists = () =>
   });
 
 const getPrimaryTrack = (album) => album?.tracks?.[0] || { title: album?.title || "Untitled", duration: "0:00" };
+
+const getArtistProfilePath = (artist) => artist.profileUrl || `/artists/${artist.id}.html`;
+
+const getArtistInitials = (name = "") =>
+  name
+    .split(/[\s-]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+
+const artistAvatarMarkup = (artist, className = "") => {
+  if (artist.image) {
+    return imageMarkup(artist.image, artist.imageAlt || artist.name, className);
+  }
+
+  return `<span class="artist-avatar ${className}">${escapeHtml(getArtistInitials(artist.name))}</span>`;
+};
 
 const getStoredTheme = () => {
   try {
@@ -221,8 +240,8 @@ function renderMiniRelease(album) {
 
 function renderHomeArtist(artist) {
   return `
-    <a class="home-artist" href="artists.html">
-      <span class="home-artist-photo">${imageMarkup(artist.image, artist.imageAlt)}</span>
+    <a class="home-artist" href="${escapeHtml(getArtistProfilePath(artist))}">
+      <span class="home-artist-photo">${artistAvatarMarkup(artist)}</span>
       <h3>${escapeHtml(artist.name)}</h3>
       <p>${escapeHtml(artist.genre)}</p>
     </a>
@@ -241,8 +260,11 @@ function renderArtistsPage() {
 
 function renderArtistCard(artist) {
   return `
-    <article class="artist-card ${artist.wide ? "wide" : ""}">
-      ${imageMarkup(artist.image, artist.imageAlt)}
+    <a class="artist-card ${artist.wide ? "wide" : ""}" href="${escapeHtml(getArtistProfilePath(artist))}">
+      <div class="artist-card-top">
+        ${artistAvatarMarkup(artist)}
+        <span class="artist-card-action material-symbols-outlined">arrow_forward</span>
+      </div>
       <div class="artist-overlay">
         <div class="artist-content">
           <span class="artist-chip">${escapeHtml(artist.chip || artist.genre || "Artist")}</span>
@@ -251,7 +273,57 @@ function renderArtistCard(artist) {
           <div class="artist-line"></div>
         </div>
       </div>
-    </article>
+    </a>
+  `;
+}
+
+function renderArtistProfilePage() {
+  const mount = document.querySelector("[data-artist-profile]");
+  if (!mount) return;
+
+  const pageId =
+    document.body.dataset.artistId ||
+    window.location.pathname
+      .split("/")
+      .pop()
+      ?.replace(/\.html$/, "");
+  const artist = (state.content.artists || []).find((item) => item.id === pageId);
+
+  if (!artist) {
+    mount.innerHTML = `
+      <section class="artist-profile">
+        <a class="text-link visible-link" href="../artists.html"><span class="material-symbols-outlined">arrow_back</span> Back to Artists</a>
+        <h1 class="page-title">Artist not found</h1>
+        <p class="page-copy">This artist profile is not available yet.</p>
+      </section>
+    `;
+    return;
+  }
+
+  document.title = `${artist.name} - World Wide Frequencies`;
+
+  mount.innerHTML = `
+    <section class="artist-profile">
+      <a class="text-link visible-link" href="../artists.html"><span class="material-symbols-outlined">arrow_back</span> Back to Artists</a>
+      <div class="artist-profile-hero">
+        <div class="artist-profile-avatar">${artistAvatarMarkup(artist)}</div>
+        <div>
+          <span class="artist-chip">${escapeHtml(artist.chip || artist.genre || "Artist")}</span>
+          <h1 class="page-title">${escapeHtml(artist.name)}</h1>
+          <p class="page-copy">${escapeHtml(artist.genre || "")}</p>
+        </div>
+      </div>
+      <div class="artist-profile-grid">
+        <article class="profile-panel">
+          <p class="label">Biography</p>
+          <p>${escapeHtml(artist.description || "Artist profile details are being curated and will be added soon.")}</p>
+        </article>
+        <article class="profile-panel">
+          <p class="label">Upcoming Content</p>
+          <p>Biography, releases, press assets, links, and booking information will be added here later.</p>
+        </article>
+      </div>
+    </section>
   `;
 }
 
@@ -378,6 +450,7 @@ async function init() {
     renderSiteChrome();
     renderHome();
     renderArtistsPage();
+    renderArtistProfilePage();
     renderReleasesPage();
     renderContactPage();
   } catch (error) {

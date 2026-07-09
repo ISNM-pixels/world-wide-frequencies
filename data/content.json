@@ -32,65 +32,67 @@
   },
   "artists": [
     {
-      "id": "voidwalker",
-      "name": "Voidwalker",
-      "genre": "Techno / Industrial",
-      "chip": "Industrial Techno",
-      "image": "assets/images/artist-voidwalker.svg",
-      "imageAlt": "Voidwalker artist portrait",
-      "description": "A pressure-built techno architect with an industrial pulse.",
-      "joinedAt": "2026-05-18"
+      "id": "jeremy-blake",
+      "name": "Jeremy Blake",
+      "genre": "Electronic / Chill Out",
+      "chip": "Electronic / Chill Out",
+      "profileUrl": "/artists/jeremy-blake.html",
+      "description": "Artist profile details are being curated and will be added soon.",
+      "joinedAt": "2026-06-20"
     },
     {
-      "id": "kinetic",
-      "name": "Kinetic",
-      "genre": "Bass / Experimental",
-      "chip": "Experimental Bass",
-      "image": "assets/images/artist-kinetic.svg",
-      "imageAlt": "Kinetic artist portrait",
-      "description": "Low-end experiments, fractured drums, and sharp system pressure.",
-      "joinedAt": "2026-04-28"
+      "id": "munkah",
+      "name": "Munkah",
+      "genre": "Electronic / Dubstep / Grime",
+      "chip": "Electronic / Dubstep / Grime",
+      "profileUrl": "/artists/munkah.html",
+      "description": "Artist profile details are being curated and will be added soon.",
+      "joinedAt": "2026-06-19"
     },
     {
-      "id": "enigma",
-      "name": "Enigma",
-      "genre": "Ambient / Drone",
-      "chip": "Ambient / Drone",
-      "image": "assets/images/artist-enigma.svg",
-      "imageAlt": "Enigma artist portrait",
-      "description": "A slow-burn ambient voice with deep negative space.",
-      "joinedAt": "2026-04-02"
+      "id": "bertran-gartner",
+      "name": "Bertran Gartner",
+      "genre": "Rock / Progressive",
+      "chip": "Rock / Progressive",
+      "profileUrl": "/artists/bertran-gartner.html",
+      "description": "Artist profile details are being curated and will be added soon.",
+      "joinedAt": "2026-06-08"
     },
     {
-      "id": "pulse-rate",
-      "name": "Pulse_Rate",
-      "genre": "Neurofunk / IDM",
-      "chip": "Neurofunk / IDM",
-      "image": "assets/images/artist-pulse-rate.svg",
-      "imageAlt": "Pulse Rate artist portrait",
-      "description": "Fast edits, restless synthesis, and machine-cut grooves.",
-      "joinedAt": "2026-03-14"
+      "id": "john-floyd",
+      "name": "John Floyd",
+      "genre": "Jazz",
+      "chip": "Jazz",
+      "profileUrl": "/artists/john-floyd.html",
+      "description": "Artist profile details are being curated and will be added soon.",
+      "joinedAt": "2026-06-07"
     },
     {
-      "id": "binary-phase",
-      "name": "Binary Phase",
-      "genre": "Live Hardware",
-      "chip": "Live Hardware",
-      "image": "assets/images/artist-binary-phase.svg",
-      "imageAlt": "Binary Phase artist portrait",
-      "description": "A brutalist hardware duo built for warehouse sound systems.",
-      "joinedAt": "2026-02-20",
-      "wide": true
+      "id": "antoine-gurst",
+      "name": "Antoine Gurst",
+      "genre": "Classical",
+      "chip": "Classical",
+      "profileUrl": "/artists/antoine-gurst.html",
+      "description": "Artist profile details are being curated and will be added soon.",
+      "joinedAt": "2026-06-06"
     },
     {
-      "id": "nexus",
-      "name": "NEXUS",
-      "genre": "Deep Tech",
-      "chip": "Deep Tech",
-      "image": "assets/images/artist-nexus.svg",
-      "imageAlt": "Nexus artist portrait",
-      "description": "Minimal deep tech with a polished nocturnal edge.",
-      "joinedAt": "2026-01-08"
+      "id": "kode-kai",
+      "name": "Kode Kai",
+      "genre": "Electronic / Glitch Hop",
+      "chip": "Electronic / Glitch Hop",
+      "profileUrl": "/artists/kode-kai.html",
+      "description": "Artist profile details are being curated and will be added soon.",
+      "joinedAt": "2026-06-05"
+    },
+    {
+      "id": "lo-kase",
+      "name": "Lo-Kase",
+      "genre": "Electronic",
+      "chip": "Electronic",
+      "profileUrl": "/artists/lo-kase.html",
+      "description": "Artist profile details are being curated and will be added soon.",
+      "joinedAt": "2026-05-20"
     }
   ],
   "albums": [

@@ -634,6 +634,12 @@ button {
   transition: filter 500ms ease, transform 500ms ease;
 }
 
+.home-artist-photo .artist-avatar {
+  width: 100%;
+  height: 100%;
+  font-size: 36px;
+}
+
 .home-artist:hover .home-artist-photo {
   border-color: var(--purple-soft);
 }
@@ -789,36 +795,65 @@ button {
 }
 
 .artist-card {
-  min-height: 420px;
-  aspect-ratio: 3 / 4;
+  min-height: 230px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: border-color 300ms ease;
+  transition: border-color 300ms ease, background 300ms ease, transform 180ms ease;
 }
 
-.artist-card img {
-  filter: var(--artist-image-filter);
+.artist-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.artist-avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--purple) 26%, transparent), transparent),
+    var(--surface-low);
+  color: var(--purple-soft);
+  font-family: "Sora", system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.artist-card-action {
+  color: var(--purple-soft);
+  transition: transform 180ms ease;
 }
 
 .artist-card:hover {
   border-color: var(--purple-soft);
+  background: var(--surface-low);
+  transform: translateY(-2px);
 }
 
-.artist-card:hover img {
-  filter: var(--card-image-filter);
+.artist-card:hover .artist-card-action {
+  transform: translateX(4px);
 }
 
 .artist-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 32px;
-  background: linear-gradient(to top, var(--media-overlay-strong), transparent 72%);
+  position: static;
+  display: block;
+  padding: 0;
+  background: none;
 }
 
 .artist-content {
-  transform: translateY(16px);
+  transform: none;
   transition: transform 420ms ease;
 }
 
@@ -840,7 +875,7 @@ button {
 .artist-name {
   margin: 0 0 8px;
   font-family: "Sora", system-ui, sans-serif;
-  font-size: clamp(28px, 4vw, 40px);
+  font-size: clamp(26px, 4vw, 36px);
   font-weight: 700;
   line-height: 1.2;
 }
@@ -852,14 +887,58 @@ button {
 }
 
 .artist-line {
-  width: 0;
+  width: 32px;
   height: 1px;
   background: var(--purple-soft);
   transition: width 420ms ease 100ms;
 }
 
 .artist-card:hover .artist-line {
-  width: 48px;
+  width: 72px;
+}
+
+.visible-link {
+  display: inline-flex;
+  margin-bottom: 40px;
+}
+
+.artist-profile {
+  display: grid;
+  gap: 56px;
+}
+
+.artist-profile-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: center;
+  padding-bottom: 56px;
+  border-bottom: 1px solid var(--line);
+}
+
+.artist-profile-avatar .artist-avatar {
+  width: 144px;
+  height: 144px;
+  font-size: 38px;
+}
+
+.artist-profile-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.profile-panel {
+  min-height: 220px;
+  padding: 28px;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.profile-panel p:last-child {
+  margin: 0;
+  color: var(--muted);
 }
 
 .contact-title {
@@ -1264,7 +1343,7 @@ button {
   }
 
   .artist-card {
-    aspect-ratio: 1;
+    min-height: 260px;
   }
 
   .contact-layout {
@@ -1292,12 +1371,16 @@ button {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .artist-card {
-    aspect-ratio: 3 / 4;
+  .artist-card.wide {
+    grid-column: auto;
   }
 
-  .artist-card.wide {
-    grid-column: span 2;
+  .artist-profile-hero {
+    grid-template-columns: auto 1fr;
+  }
+
+  .artist-profile-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .progress {
