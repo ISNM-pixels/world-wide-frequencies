@@ -1,4 +1,4 @@
-# Obsidian Pulse Content Editing Guide
+# World Wide Frequencies Content Editing Guide
 
 This site is data-driven. Do not edit artist cards, album cards, hero text, footer links, or contact info directly inside the HTML files unless you are changing layout/structure. Most content changes belong in `data/content.json`.
 
@@ -145,8 +145,7 @@ Global content lives in `site`.
 Common edits:
 
 ```json
-"brand": "Obsidian Pulse",
-"email": "info@obsidianpulse.com",
+"brand": "World Wide Frequencies",
 "tagline": "Architects of the modern soundscape."
 ```
 

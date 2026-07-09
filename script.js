@@ -5,6 +5,8 @@ const state = {
   releaseFilter: "all",
 };
 
+const themeStorageKey = "wwf-theme";
+
 const byDateDesc = (dateKey) => (a, b) => {
   const aTime = Date.parse(a[dateKey] || "") || 0;
   const bTime = Date.parse(b[dateKey] || "") || 0;
@@ -47,6 +49,47 @@ const getSortedArtists = () =>
 
 const getPrimaryTrack = (album) => album?.tracks?.[0] || { title: album?.title || "Untitled", duration: "0:00" };
 
+const getStoredTheme = () => {
+  try {
+    return localStorage.getItem(themeStorageKey);
+  } catch {
+    return null;
+  }
+};
+
+const storeTheme = (theme) => {
+  try {
+    localStorage.setItem(themeStorageKey, theme);
+  } catch {
+    return;
+  }
+};
+
+function applyTheme(theme) {
+  const isLight = theme === "light";
+  document.documentElement.dataset.theme = isLight ? "light" : "dark";
+  document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+    button.setAttribute("aria-pressed", String(isLight));
+    button.setAttribute("aria-label", isLight ? "Activate dark mode" : "Activate light mode");
+    const icon = button.querySelector("[data-theme-icon]");
+    if (icon) icon.textContent = isLight ? "dark_mode" : "light_mode";
+  });
+}
+
+function initTheme() {
+  const savedTheme = getStoredTheme();
+  const initialTheme = savedTheme === "light" ? "light" : "dark";
+  applyTheme(initialTheme);
+
+  document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const nextTheme = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+      storeTheme(nextTheme);
+      applyTheme(nextTheme);
+    });
+  });
+}
+
 function initMenu() {
   document.querySelectorAll("[data-menu-toggle]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -77,7 +120,7 @@ function initDemoForm() {
 
 function renderSiteChrome() {
   const site = state.content.site || {};
-  setText("[data-site-brand]", site.brand || "Obsidian Pulse");
+  setText("[data-site-brand]", site.brand || "World Wide Frequencies");
   renderFooter(site);
 }
 
@@ -89,7 +132,7 @@ function renderFooter(site) {
     footer.innerHTML = `
       <div class="container footer-main">
         <div class="footer-brand">
-          <div class="footer-logo">${escapeHtml(site.brand || "Obsidian Pulse")}</div>
+          <div class="footer-logo">${escapeHtml(site.brand || "World Wide Frequencies")}</div>
           <p class="footer-copy">${escapeHtml(site.tagline || "")}</p>
         </div>
         <div class="footer-links">
@@ -263,16 +306,9 @@ function initReleaseFilters() {
 function renderContactPage() {
   const site = state.content.site || {};
   const contact = site.contact || {};
-  const emailNode = document.querySelector("[data-contact-email]");
-
   setText("[data-contact-title]", contact.title || "Transmit.");
   setText("[data-contact-network-title]", contact.networkTitle || "Network");
   setText("[data-contact-note]", contact.note || "");
-
-  if (emailNode) {
-    emailNode.textContent = site.email || "";
-    emailNode.href = `mailto:${site.email || ""}`;
-  }
 
   const socialsMount = document.querySelector("[data-contact-socials]");
   if (socialsMount) {
@@ -332,6 +368,7 @@ async function loadContent() {
 }
 
 async function init() {
+  initTheme();
   initMenu();
   initDemoForm();
   initReleaseFilters();

@@ -34,5 +34,5 @@ createServer(async (req, res) => {
     res.end("Not found");
   }
 }).listen(port, host, () => {
-  console.log(`Obsidian Pulse running at http://${host}:${port}/`);
+  console.log(`World Wide Frequencies running at http://${host}:${port}/`);
 });
