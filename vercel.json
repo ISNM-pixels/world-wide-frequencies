@@ -38,6 +38,69 @@
           "value": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: https://slnrpuaqjdvrodahgzbr.supabase.co; media-src 'self' blob: https://slnrpuaqjdvrodahgzbr.supabase.co; connect-src 'self' https://slnrpuaqjdvrodahgzbr.supabase.co; form-action 'none'; base-uri 'self'; frame-ancestors 'none'"
         }
       ]
+    },
+    {
+      "source": "/admin",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: https://slnrpuaqjdvrodahgzbr.supabase.co; media-src 'self' blob: https://slnrpuaqjdvrodahgzbr.supabase.co; connect-src 'self' https://slnrpuaqjdvrodahgzbr.supabase.co; form-action 'none'; base-uri 'self'; frame-ancestors 'none'"
+        }
+      ]
+    },
+    {
+      "source": "/admin/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: https://slnrpuaqjdvrodahgzbr.supabase.co; media-src 'self' blob: https://slnrpuaqjdvrodahgzbr.supabase.co; connect-src 'self' https://slnrpuaqjdvrodahgzbr.supabase.co; form-action 'none'; base-uri 'self'; frame-ancestors 'none'"
+        }
+      ]
+    },
+    {
+      "source": "/admin/index.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: https://slnrpuaqjdvrodahgzbr.supabase.co; media-src 'self' blob: https://slnrpuaqjdvrodahgzbr.supabase.co; connect-src 'self' https://slnrpuaqjdvrodahgzbr.supabase.co; form-action 'none'; base-uri 'self'; frame-ancestors 'none'"
+        }
+      ]
     }
   ]
 }
