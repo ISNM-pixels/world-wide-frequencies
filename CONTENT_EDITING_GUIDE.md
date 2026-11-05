@@ -1,231 +1,83 @@
-# World Wide Frequencies Content Editing Guide
+# World Wide Frequencies — content and publishing
 
-This site is data-driven. Do not edit artist cards, album cards, hero text, footer links, or contact info directly inside the HTML files unless you are changing layout/structure. Most content changes belong in `data/content.json`.
+## Run and publish
 
-## Source Of Truth
-
-- `data/content.json` is the main editable content file.
-- `assets/images/` contains local images used by the JSON.
-- `script.js` renders the content into the HTML templates.
-- `index.html`, `artists.html`, `releases.html`, and `contact.html` are mostly templates with `data-*` mount points.
-
-If a user asks to add/remove/change artists, albums, songs, images, hero copy, email, social links, or footer text, edit `data/content.json` first.
-
-## Image Rules
-
-Put new images in `assets/images/` and reference them from JSON with a relative path:
-
-```json
-"image": "assets/images/new-artist.jpg"
-```
-
-Recommended formats:
-
-- `.jpg` or `.webp` for photos.
-- `.png` for artwork with transparency.
-- `.svg` for lightweight placeholder or generated vector-style art.
-
-Keep filenames lowercase and descriptive:
+Requires Node.js 22 or later. No dependencies or installation needed.
 
 ```text
-assets/images/artist-luna-veil.jpg
-assets/images/album-night-current.webp
-assets/images/hero-live-room.jpg
+npm run dev
 ```
 
-Every image field should have a matching alt field:
+Open http://127.0.0.1:5173/. After editing content or templates, run `npm run build` and reload. The server serves `dist/`, never the source checkout. `npm test` verifies generated routes, metadata, links, media and the preview/form behavior.
 
-```json
-"image": "assets/images/artist-luna-veil.jpg",
-"imageAlt": "Luna Veil artist portrait"
-```
+Vercel builds `main` with `npm run build` and publishes `dist/`. The existing production URL is https://world-wide-frequencies.vercel.app/. Commit and push validated source changes to deploy. Generated HTML is ignored by Git: never edit `dist/` directly. The former root and artist HTML files are now generated at the same public addresses.
 
-## Editing Artists
+## Edit content
 
-Artists live in the `artists` array.
+`data/content.json` is the source of truth. `scripts/build.mjs` contains the shared layouts and page templates. `styles.css` handles presentation; `script.js` handles filters, demos and audio. The build produces all artist and release pages, metadata, sitemap and 404.
 
-Required fields:
+### Releases
 
-- `id`: unique lowercase identifier.
-- `name`: display name.
-- `genre`: short genre label.
-- `image`: local image path.
-- `joinedAt`: date used for automatic home ordering.
+Add an object to `albums` with a unique lowercase hyphenated `id`, `title`, display `artist`, `type` (`album`, `single`, `ep`), `label`, `status`, ISO `releaseDate`, `cover`, `coverAlt`, `artistIds`, `platforms` and `tracks`. The build creates `/releases/<id>.html`. Set `site.featuredReleaseId` to select the homepage feature; otherwise the latest release is used. The home grid uses release date order.
 
-Recommended fields:
+Each track needs a unique `id` within that release, `title`, full-song `duration` (e.g. `4:23`), and `previewUrl` (empty until available).
 
-- `chip`: short label shown on artist cards.
-- `imageAlt`: accessible image description.
-- `description`: short artist description.
-- `wide`: optional boolean for a wider artist card on desktop.
+`artist` is the displayed credit. Set `artistIds` to known roster IDs to link credits and show the release on their profiles. Keep it empty when there is no confirmed relationship. The existing six releases and seven artists remain provisional; no relationships were inferred.
 
-Example:
+### Add your previews
+
+Prepare the exact excerpt you want listeners to hear (approximately 25 seconds) and place it in `assets/audio/`. Use lowercase filenames. MP3 is recommended; WAV, OGG and M4A are also supported. A public HTTPS audio URL is also accepted.
 
 ```json
 {
-  "id": "luna-veil",
-  "name": "Luna Veil",
-  "genre": "Hypnotic Techno",
-  "chip": "Hypnotic Techno",
-  "image": "assets/images/artist-luna-veil.jpg",
-  "imageAlt": "Luna Veil artist portrait",
-  "description": "Precision-built late-night techno with a cinematic edge.",
-  "joinedAt": "2026-06-01"
+  "id": "synaptic-echoes",
+  "title": "Synaptic Echoes",
+  "duration": "4:23",
+  "previewUrl": "assets/audio/synaptic-echoes-preview.mp3"
 }
 ```
 
-To remove an artist, delete that artist object from the `artists` array. Check albums afterward: if albums still reference that artist name, decide whether those releases should stay.
+The player plays the entire excerpt file. It does not cut a full song or enforce a 25-second limit. Its timer reports the actual audio duration, independently of the full track time. Missing previews display “Preview coming soon”. No preview files are included with the provisional catalog. Do not commit QA audio fixtures.
 
-## Editing Albums And Tracks
+One player is shared within each page. Playback begins only when a listener presses Preview; navigation stops it. Loading failures show an error and leave other previews available.
 
-Albums and singles live in the `albums` array. Each album can contain multiple tracks.
+### Streaming buttons
 
-Required fields:
-
-- `id`: unique lowercase identifier.
-- `title`: release title.
-- `artist`: display artist name.
-- `type`: usually `album` or `single`.
-- `releaseDate`: date used for automatic home ordering.
-- `cover`: local image path.
-- `tracks`: array of track objects.
-
-Recommended fields:
-
-- `label`: short display label, such as `LP`, `Album`, or `Single`.
-- `status`: short status, such as `Out Now` or `Archive`.
-- `coverAlt`: accessible image description.
-
-Example:
+In each release's `platforms`, add as many label/URL entries as needed:
 
 ```json
-{
-  "id": "night-current",
-  "title": "Night Current",
-  "artist": "Luna Veil",
-  "type": "album",
-  "label": "LP",
-  "status": "Out Now",
-  "releaseDate": "2026-06-15",
-  "cover": "assets/images/album-night-current.jpg",
-  "coverAlt": "Night Current album artwork",
-  "tracks": [
-    { "title": "Night Current", "duration": "5:12" },
-    { "title": "Soft Voltage", "duration": "4:46" }
-  ]
-}
-```
-
-To add a song, add one object inside `tracks`.
-
-To remove a song, delete that track object.
-
-To remove a release, delete the release object from `albums`.
-
-## Home Page Ordering
-
-The home page is automatic:
-
-- New releases are the most recent `albums`, sorted by `releaseDate` descending.
-- Roster preview uses the most recent `artists`, sorted by `joinedAt` descending.
-- The audio player uses `player.albumId` and `player.trackTitle`. If those are missing or invalid, it falls back to the newest album and its first track.
-
-Use ISO dates:
-
-```json
-"releaseDate": "2026-06-15"
-```
-
-Avoid ambiguous dates like `06/15/26`.
-
-## Editing Site, Hero, Contact, Footer
-
-Global content lives in `site`.
-
-Common edits:
-
-```json
-"brand": "World Wide Frequencies",
-"tagline": "Architects of the modern soundscape."
-```
-
-Hero content:
-
-```json
-"hero": {
-  "eyebrow": "New Era",
-  "title": "The Sound<br>Of The Future",
-  "copy": "Pushing the boundaries of electronic music.",
-  "image": "assets/images/hero-pulse.svg",
-  "imageAlt": "Electronic concert crowd with purple lasers"
-}
-```
-
-The hero title may include `<br>` for intentional line breaks. Avoid other HTML in JSON unless there is a clear reason.
-
-Social and legal links:
-
-```json
-"socials": [
-  { "label": "Instagram", "url": "https://instagram.com/example" }
-],
-"legal": [
-  { "label": "Privacy Policy", "url": "#" }
+[
+  { "label": "Spotify", "url": "https://open.spotify.com/album/YOUR_ID" },
+  { "label": "Apple Music", "url": "https://music.apple.com/album/YOUR_ID" },
+  { "label": "Tidal", "url": "https://tidal.com/album/YOUR_ID" },
+  { "label": "Amazon Music", "url": "https://music.amazon.com/albums/YOUR_ID" }
 ]
 ```
 
-## Best Practices For AI Editors
+Use actual release URLs. These examples are instructions, not working links. Empty or non-HTTP(S) links are not rendered. New services need no template changes. Streaming links open in a new tab.
 
-1. Prefer data edits over HTML edits.
-2. Keep the JSON valid: no trailing commas, all strings quoted.
-3. Keep IDs unique.
-4. Use local image paths under `assets/images/`.
-5. Add alt text for every new image.
-6. Use ISO date format: `YYYY-MM-DD`.
-7. Preserve existing visual classes and `data-*` attributes unless intentionally changing rendering.
-8. After editing, validate JSON and reload the localhost page.
+### Artists
 
-Recommended checks:
+Add an object to `artists` with unique `id`, `name`, `genre`, `description`, optional `image` and `imageAlt`, `joinedAt` and `links` (the same label/URL format). The build creates `/artists/<id>.html` automatically. `profileUrl` remains for compatibility but generated routes use the ID.
 
-```powershell
-node -e "JSON.parse(require('fs').readFileSync('data/content.json','utf8')); console.log('json ok')"
-node --check script.js
-```
+Put photography in `assets/images/`. An empty image uses an initials placeholder; missing biography and links have honest pending states. Add confirmed releases through each release's `artistIds`.
 
-If localhost is running, verify:
+### Site and contact
 
-```text
-http://127.0.0.1:5173/
-http://127.0.0.1:5173/artists.html
-http://127.0.0.1:5173/releases.html
-http://127.0.0.1:5173/contact.html
-```
+- `site.url`: production origin used for canonical and sitemap URLs.
+- `site.contact.email`: actual public enquiries email, empty until confirmed.
+- `site.socials`: real footer and contact links, using label/URL entries.
+- `site.legal`: published legal page links; placeholders are hidden. Add reviewed text and operator details before collecting real submissions.
+- `site.tagline`: footer text. Copyright year is generated automatically.
 
-## When To Edit HTML Or CSS
+## Demo Drop is a simulation
 
-Edit HTML only when adding a new section, changing page layout, or adding a new mount point for rendered data.
+`/demos.html` validates input and displays a simulated success message. No request, email, upload, analytics or browser storage is used by the form. Inputs are reset after success and on page restoration. A visible demo notice remains on the public page.
 
-Edit CSS only when changing visual design, responsive behavior, spacing, typography, or component states.
+Before accepting real submissions, choose a delivery/storage service, implement a server endpoint, rate limiting and spam controls, add the appropriate privacy information, and replace the simulation handler. Only show a real confirmation after the server acknowledges receipt. Never place credentials in content JSON or browser JavaScript.
 
-Do not duplicate content into HTML. If content appears in more than one place, add it to `data/content.json` and render it from `script.js`.
+## Visual assets and checks
 
-## Troubleshooting
+Existing SVG covers are retained as provisional artwork. The shared 1200×630 social card is a PNG for sharing previews. Never use Spinnin’ artwork, names or logos as label content.
 
-If content does not appear:
-
-- Confirm the site is opened through localhost, not directly as a file.
-- Confirm `data/content.json` is valid JSON.
-- Confirm paths in JSON match real files.
-- Check the browser console for errors.
-
-If an image is missing:
-
-- Confirm the file exists in `assets/images/`.
-- Confirm the JSON path is correct.
-- Confirm the filename extension matches exactly.
-
-If home ordering looks wrong:
-
-- Check `releaseDate` on albums.
-- Check `joinedAt` on artists.
-- Use `YYYY-MM-DD` format.
+Before deploying: build, run tests, inspect mobile/tablet/desktop views, test demos, test supplied audio, check platform links and verify the Vercel deployment status and production URL. Revert the release commit on main and push if a production rollback is needed.

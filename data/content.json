@@ -1,34 +1,14 @@
 {
   "site": {
     "brand": "World Wide Frequencies",
-    "tagline": "Architects of the modern soundscape.",
-    "copyright": "(c) 2024 World Wide Frequencies. All rights reserved.",
-    "hero": {
-      "eyebrow": "New Era",
-      "title": "The Sound<br>Of The Future",
-      "copy": "Pushing the boundaries of electronic music. We amplify the underground, curating visceral audio experiences for the discerning listener.",
-      "image": "assets/images/hero-pulse.svg",
-      "imageAlt": "Electronic concert crowd with purple lasers"
-    },
-    "home": {
-      "releaseSubtitle": "Latest transmissions from the void.",
-      "rosterTitle": "The Roster"
-    },
+    "url": "https://world-wide-frequencies.vercel.app",
+    "tagline": "Independent sounds. Worldwide.",
+    "featuredReleaseId": "synaptic-echoes",
     "contact": {
-      "title": "Transmit.",
-      "networkTitle": "Network",
-      "note": "For demo submissions, please use the form provided. Send private Soundcloud links only. Do not attach audio files directly."
+      "email": ""
     },
-    "socials": [
-      { "label": "Instagram", "url": "#" },
-      { "label": "Soundcloud", "url": "#" },
-      { "label": "Resident Advisor", "url": "#" },
-      { "label": "Newsletter Signup", "url": "#" }
-    ],
-    "legal": [
-      { "label": "Privacy Policy", "url": "#" },
-      { "label": "Terms of Service", "url": "#" }
-    ]
+    "socials": [],
+    "legal": []
   },
   "artists": [
     {
@@ -38,7 +18,10 @@
       "chip": "Electronic / Chill Out",
       "profileUrl": "/artists/jeremy-blake.html",
       "description": "Artist profile details are being curated and will be added soon.",
-      "joinedAt": "2026-06-20"
+      "joinedAt": "2026-06-20",
+      "image": "",
+      "imageAlt": "",
+      "links": []
     },
     {
       "id": "munkah",
@@ -47,7 +30,10 @@
       "chip": "Electronic / Dubstep / Grime",
       "profileUrl": "/artists/munkah.html",
       "description": "Artist profile details are being curated and will be added soon.",
-      "joinedAt": "2026-06-19"
+      "joinedAt": "2026-06-19",
+      "image": "",
+      "imageAlt": "",
+      "links": []
     },
     {
       "id": "bertran-gartner",
@@ -56,7 +42,10 @@
       "chip": "Rock / Progressive",
       "profileUrl": "/artists/bertran-gartner.html",
       "description": "Artist profile details are being curated and will be added soon.",
-      "joinedAt": "2026-06-08"
+      "joinedAt": "2026-06-08",
+      "image": "",
+      "imageAlt": "",
+      "links": []
     },
     {
       "id": "john-floyd",
@@ -65,7 +54,10 @@
       "chip": "Jazz",
       "profileUrl": "/artists/john-floyd.html",
       "description": "Artist profile details are being curated and will be added soon.",
-      "joinedAt": "2026-06-07"
+      "joinedAt": "2026-06-07",
+      "image": "",
+      "imageAlt": "",
+      "links": []
     },
     {
       "id": "antoine-gurst",
@@ -74,7 +66,10 @@
       "chip": "Classical",
       "profileUrl": "/artists/antoine-gurst.html",
       "description": "Artist profile details are being curated and will be added soon.",
-      "joinedAt": "2026-06-06"
+      "joinedAt": "2026-06-06",
+      "image": "",
+      "imageAlt": "",
+      "links": []
     },
     {
       "id": "kode-kai",
@@ -83,7 +78,10 @@
       "chip": "Electronic / Glitch Hop",
       "profileUrl": "/artists/kode-kai.html",
       "description": "Artist profile details are being curated and will be added soon.",
-      "joinedAt": "2026-06-05"
+      "joinedAt": "2026-06-05",
+      "image": "",
+      "imageAlt": "",
+      "links": []
     },
     {
       "id": "lo-kase",
@@ -92,7 +90,10 @@
       "chip": "Electronic",
       "profileUrl": "/artists/lo-kase.html",
       "description": "Artist profile details are being curated and will be added soon.",
-      "joinedAt": "2026-05-20"
+      "joinedAt": "2026-05-20",
+      "image": "",
+      "imageAlt": "",
+      "links": []
     }
   ],
   "albums": [
@@ -107,10 +108,27 @@
       "cover": "assets/images/album-synaptic-echoes.svg",
       "coverAlt": "Synaptic Echoes album artwork",
       "tracks": [
-        { "title": "Synaptic Echoes", "duration": "4:23" },
-        { "title": "Glass Circuit", "duration": "5:02" },
-        { "title": "Blackout Signal", "duration": "6:11" }
-      ]
+        {
+          "title": "Synaptic Echoes",
+          "duration": "4:23",
+          "id": "synaptic-echoes",
+          "previewUrl": ""
+        },
+        {
+          "title": "Glass Circuit",
+          "duration": "5:02",
+          "id": "glass-circuit",
+          "previewUrl": ""
+        },
+        {
+          "title": "Blackout Signal",
+          "duration": "6:11",
+          "id": "blackout-signal",
+          "previewUrl": ""
+        }
+      ],
+      "artistIds": [],
+      "platforms": []
     },
     {
       "id": "fracture-point",
@@ -123,9 +141,21 @@
       "cover": "assets/images/album-fracture-point.svg",
       "coverAlt": "Fracture Point album artwork",
       "tracks": [
-        { "title": "Fracture Point", "duration": "3:48" },
-        { "title": "Impact Tool", "duration": "4:16" }
-      ]
+        {
+          "title": "Fracture Point",
+          "duration": "3:48",
+          "id": "fracture-point",
+          "previewUrl": ""
+        },
+        {
+          "title": "Impact Tool",
+          "duration": "4:16",
+          "id": "impact-tool",
+          "previewUrl": ""
+        }
+      ],
+      "artistIds": [],
+      "platforms": []
     },
     {
       "id": "null-state",
@@ -138,10 +168,27 @@
       "cover": "assets/images/album-null-state.svg",
       "coverAlt": "Null State album artwork",
       "tracks": [
-        { "title": "Null State", "duration": "7:14" },
-        { "title": "Vacuum Memory", "duration": "5:58" },
-        { "title": "Cold Drift", "duration": "6:31" }
-      ]
+        {
+          "title": "Null State",
+          "duration": "7:14",
+          "id": "null-state",
+          "previewUrl": ""
+        },
+        {
+          "title": "Vacuum Memory",
+          "duration": "5:58",
+          "id": "vacuum-memory",
+          "previewUrl": ""
+        },
+        {
+          "title": "Cold Drift",
+          "duration": "6:31",
+          "id": "cold-drift",
+          "previewUrl": ""
+        }
+      ],
+      "artistIds": [],
+      "platforms": []
     },
     {
       "id": "void-protocol",
@@ -154,9 +201,21 @@
       "cover": "assets/images/album-void-protocol.svg",
       "coverAlt": "Void Protocol artwork",
       "tracks": [
-        { "title": "Void Protocol", "duration": "5:40" },
-        { "title": "Subroutine", "duration": "4:44" }
-      ]
+        {
+          "title": "Void Protocol",
+          "duration": "5:40",
+          "id": "void-protocol",
+          "previewUrl": ""
+        },
+        {
+          "title": "Subroutine",
+          "duration": "4:44",
+          "id": "subroutine",
+          "previewUrl": ""
+        }
+      ],
+      "artistIds": [],
+      "platforms": []
     },
     {
       "id": "neural-mesh",
@@ -169,8 +228,15 @@
       "cover": "assets/images/album-neural-mesh.svg",
       "coverAlt": "Neural Mesh artwork",
       "tracks": [
-        { "title": "Neural Mesh", "duration": "4:05" }
-      ]
+        {
+          "title": "Neural Mesh",
+          "duration": "4:05",
+          "id": "neural-mesh",
+          "previewUrl": ""
+        }
+      ],
+      "artistIds": [],
+      "platforms": []
     },
     {
       "id": "phase-shift",
@@ -183,12 +249,15 @@
       "cover": "assets/images/album-phase-shift.svg",
       "coverAlt": "Phase Shift artwork",
       "tracks": [
-        { "title": "Phase Shift", "duration": "4:52" }
-      ]
+        {
+          "title": "Phase Shift",
+          "duration": "4:52",
+          "id": "phase-shift",
+          "previewUrl": ""
+        }
+      ],
+      "artistIds": [],
+      "platforms": []
     }
-  ],
-  "player": {
-    "albumId": "synaptic-echoes",
-    "trackTitle": "Synaptic Echoes"
-  }
+  ]
 }
