@@ -21,6 +21,16 @@ test('content rejects executable URLs and arbitrary media paths',()=>{
   assert.throws(()=>validateContent(c));c.artists[0].links=[];
   c.artists[0].image='../../server.mjs';assert.throws(()=>validateContent(c));
 });
+
+test('track duration may be pending but supplied durations must be valid',()=>{
+  const c=structuredClone(source);
+  c.albums=[{id:'imported',title:'Imported',artist:'Artist',type:'album',releaseDate:'2026-01-01',artistIds:[],platforms:[],cover:'assets/images/placeholder.svg',tracks:[{id:'first',title:'First',duration:'',previewUrl:''}]}];
+  assert.doesNotThrow(()=>validateContent(c,{publishing:true}));
+  for(const invalid of ['unknown','3:99',null,123]){
+    c.albums[0].tracks[0].duration=invalid;assert.throws(()=>validateContent(c));
+  }
+  c.albums[0].tracks[0].duration='4:23';assert.doesNotThrow(()=>validateContent(c,{publishing:true}));
+});
 test('only media used by the draft is retained in its manifest',()=>{
   const c=structuredClone(source);const image=`media/${'a'.repeat(64)}.webp`;c.artists[0].image=image;c.artists[1].image=image;
   assert.deepEqual(referencedMedia(c),[image]);

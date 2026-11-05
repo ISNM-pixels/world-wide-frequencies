@@ -47,7 +47,7 @@ export function validateContent(content, { publishing = false } = {}) {
     ids(a.tracks, 'pista');
     for (const t of a.tracks) {
       text(t.title, 'el título de la pista', 200);
-      if (!/^\d{1,3}:[0-5]\d$/.test(t.duration)) fail('Usa una duración como 4:23.');
+      if (typeof t.duration !== 'string' || (t.duration !== '' && !/^\d{1,3}:[0-5]\d$/.test(t.duration))) fail('Usa una duración como 4:23 o deja el campo pendiente.');
       if (t.previewUrl && !MEDIA_PATH.test(t.previewUrl)) fail('Selecciona un fragmento de la biblioteca.');
     }
   }

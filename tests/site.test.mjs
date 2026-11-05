@@ -63,7 +63,7 @@ test('prepare isolated media fixtures and verify optional streaming/artist relat
   await mkdir(fixture,{recursive:true});
   for(const item of ['scripts','assets','styles.css','script.js','admin','lib','supabase'])await cp(path.join(root,item),path.join(fixture,item),{recursive:true});
   const clone=structuredClone(data);
-  clone.albums=[{id:'qa-release',title:'QA Release',artist:'QA Artist',type:'album',label:'LP',status:'Out Now',releaseDate:'2026-01-01',cover:'assets/images/placeholder.svg',coverAlt:'QA artwork',artistIds:[],platforms:[],tracks:[{id:'first',title:'First',duration:'4:00',previewUrl:''},{id:'second',title:'Second',duration:'3:00',previewUrl:''},{id:'third',title:'Third',duration:'2:00',previewUrl:''}]}];
+  clone.albums=[{id:'qa-release',title:'QA Release',artist:'QA Artist',type:'album',label:'LP',status:'Out Now',releaseDate:'2026-01-01',cover:'assets/images/placeholder.svg',coverAlt:'QA artwork',artistIds:[],platforms:[],tracks:[{id:'first',title:'First',duration:'',previewUrl:''},{id:'second',title:'Second',duration:'3:00',previewUrl:''},{id:'third',title:'Third',duration:'2:00',previewUrl:''}]}];
   clone.artists=[{id:'qa-artist',name:'QA Artist',profileUrl:'/artists/qa-artist.html',genre:'Test',description:'',image:'',imageAlt:'',links:[]}];
   const media=path.join(fixture,'assets/audio');await mkdir(media,{recursive:true});
   function wav(seconds){const rate=8000,n=rate*seconds;const buffer=Buffer.alloc(44+n*2);buffer.write('RIFF');buffer.writeUInt32LE(buffer.length-8,4);buffer.write('WAVEfmt ',8);buffer.writeUInt32LE(16,16);buffer.writeUInt16LE(1,20);buffer.writeUInt16LE(1,22);buffer.writeUInt32LE(rate,24);buffer.writeUInt32LE(rate*2,28);buffer.writeUInt16LE(2,32);buffer.writeUInt16LE(16,34);buffer.write('data',36);buffer.writeUInt32LE(n*2,40);for(let i=0;i<n;i++)buffer.writeInt16LE(Math.round(1000*Math.sin(2*Math.PI*220*i/rate)),44+i*2);return buffer;}
@@ -79,6 +79,7 @@ test('prepare isolated media fixtures and verify optional streaming/artist relat
   assert.equal([...html.matchAll(/data-preview="/g)].length,3);
   assert.match(html,/target="_blank" rel="noopener noreferrer">Spotify/);assert.doesNotMatch(html,/javascript:alert/);
   assert.match(html,/href="\/artists\/qa-artist">QA Artist/);
+  assert.match(html,/Track duration coming soon/);assert.doesNotMatch(html,/Full track duration: <\/span>0:00/);
   assert.match(html,/<link rel="canonical" href="https:\/\/world-wide-frequencies.vercel.app\/releases\/qa-release"/);
   const published=JSON.parse(await readFile(path.join(fixture,'dist/data/content.json'),'utf8'));
   assert.equal(published.artists[0].profileUrl,'/artists/qa-artist');

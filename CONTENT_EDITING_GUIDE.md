@@ -31,7 +31,7 @@ Las direcciones públicas no llevan `.html`: por ejemplo, `/artists/w-francis`, 
 ## Archivos y cuota
 
 - Imágenes de entrada: JPEG, PNG o WebP de hasta 15 MB. El navegador las convierte a WebP de hasta 1600 píxeles y 500 KB antes de subirlas. No se guarda el original.
-- Audio: fragmentos MP3 ya preparados, de hasta 30 segundos y 2 MB. La duración completa de la canción se introduce aparte.
+- Audio: fragmentos MP3 ya preparados, de hasta 30 segundos y 2 MB. La duración completa de la canción se introduce aparte. Si no se conoce, deja el campo vacío: la web mostrará un guion y no inventará un tiempo.
 - Límite interno de biblioteca: 50 MB. Los archivos idénticos se reutilizan mediante su checksum.
 - Biblioteca: puedes eliminar archivos que no use el borrador ni las versiones conservadas.
 - Se conservan la versión publicada y hasta dos versiones anteriores. No hay crons, Realtime ni keep-alive.
