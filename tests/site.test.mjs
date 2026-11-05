@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { readFile, readdir, stat, mkdir, cp, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,8 +28,11 @@ test('generated pages have real metadata and no broken internal links or placeho
     assert.match(html,/<html lang="en">/);assert.match(html,/<meta name="description"/);
     assert.match(html,/<link rel="canonical" href="https:\/\/world-wide-frequencies.vercel.app/);
     assert.match(html,/property="og:image"/);assert.doesNotMatch(html,/href="#"/);
+    assert.doesNotMatch(html,/href="\/[^"#]*\.html(?:["?#])/);
+    assert.doesNotMatch(html,/<(?:link rel="canonical"|meta property="og:url")[^>]*\.html/);
     for(const match of html.matchAll(/(?:href|src)="(\/[^"#]*)"/g)){
-      const target=match[1]==='/index.html'?'/index.html':match[1];
+      const route=new URL(match[1],'https://example.test').pathname;
+      const target=route==='/'?'/index.html':path.extname(route)?route:route+'.html';
       assert.ok((await stat(path.join(dist,target))).isFile(),`${filename}: ${target}`);
     }
   }
@@ -50,6 +53,9 @@ test('distribution excludes source, tests and QA files; sitemap covers public pa
   for(const file of ['package.json','server.mjs','CONTENT_EDITING_GUIDE.md','scripts','tests','.qa','.git'])await assert.rejects(stat(path.join(dist,file)));
   const sitemap=await readFile(path.join(dist,'sitemap.xml'),'utf8');
   assert.equal([...sitemap.matchAll(/<loc>/g)].length,6 + data.artists.length + data.albums.length);assert.ok(!sitemap.includes('404.html'));
+  assert.ok(!sitemap.includes('.html'));
+  const published=JSON.parse(await readFile(path.join(dist,'data/content.json'),'utf8'));
+  for(const artist of published.artists)assert.equal(artist.profileUrl,`/artists/${artist.id}`);
   assert.ok((await stat(path.join(dist,'assets/images/social-card.png'))).size>1000);
 });
 test('prepare isolated media fixtures and verify optional streaming/artist relationships',async()=>{
@@ -58,7 +64,7 @@ test('prepare isolated media fixtures and verify optional streaming/artist relat
   for(const item of ['scripts','assets','styles.css','script.js','admin','lib','supabase'])await cp(path.join(root,item),path.join(fixture,item),{recursive:true});
   const clone=structuredClone(data);
   clone.albums=[{id:'qa-release',title:'QA Release',artist:'QA Artist',type:'album',label:'LP',status:'Out Now',releaseDate:'2026-01-01',cover:'assets/images/placeholder.svg',coverAlt:'QA artwork',artistIds:[],platforms:[],tracks:[{id:'first',title:'First',duration:'4:00',previewUrl:''},{id:'second',title:'Second',duration:'3:00',previewUrl:''},{id:'third',title:'Third',duration:'2:00',previewUrl:''}]}];
-  clone.artists=[{id:'qa-artist',name:'QA Artist',genre:'Test',description:'',image:'',imageAlt:'',links:[]}];
+  clone.artists=[{id:'qa-artist',name:'QA Artist',profileUrl:'/artists/qa-artist.html',genre:'Test',description:'',image:'',imageAlt:'',links:[]}];
   const media=path.join(fixture,'assets/audio');await mkdir(media,{recursive:true});
   function wav(seconds){const rate=8000,n=rate*seconds;const buffer=Buffer.alloc(44+n*2);buffer.write('RIFF');buffer.writeUInt32LE(buffer.length-8,4);buffer.write('WAVEfmt ',8);buffer.writeUInt32LE(16,16);buffer.writeUInt16LE(1,20);buffer.writeUInt16LE(1,22);buffer.writeUInt32LE(rate,24);buffer.writeUInt32LE(rate*2,28);buffer.writeUInt16LE(2,32);buffer.writeUInt16LE(16,34);buffer.write('data',36);buffer.writeUInt32LE(n*2,40);for(let i=0;i<n;i++)buffer.writeInt16LE(Math.round(1000*Math.sin(2*Math.PI*220*i/rate)),44+i*2);return buffer;}
   await writeFile(path.join(media,'qa-preview.wav'),wav(25));await writeFile(path.join(media,'qa-short.wav'),wav(2));
@@ -72,8 +78,36 @@ test('prepare isolated media fixtures and verify optional streaming/artist relat
   const html=await readFile(path.join(fixture,'dist/releases/qa-release.html'),'utf8');
   assert.equal([...html.matchAll(/data-preview="/g)].length,3);
   assert.match(html,/target="_blank" rel="noopener noreferrer">Spotify/);assert.doesNotMatch(html,/javascript:alert/);
-  assert.match(html,/href="\/artists\/qa-artist.html">QA Artist/);
+  assert.match(html,/href="\/artists\/qa-artist">QA Artist/);
+  assert.match(html,/<link rel="canonical" href="https:\/\/world-wide-frequencies.vercel.app\/releases\/qa-release"/);
+  const published=JSON.parse(await readFile(path.join(fixture,'dist/data/content.json'),'utf8'));
+  assert.equal(published.artists[0].profileUrl,'/artists/qa-artist');
   const queue=JSON.parse(html.match(/id="preview-data" type="application\/json">(.*?)<\/script>/s)[1]);assert.equal(queue.length,3);
   // Browser QA uses this isolated output. Never copy fixture media to production dist.
   await cp(path.join(fixture,'dist'),path.join(root,'.qa/site'),{recursive:true});
+});
+
+test('local server serves clean routes and redirects old links without losing queries',async t=>{
+  const child=spawn(process.execPath,['server.mjs','.qa/source/dist'],{cwd:root,env:{...process.env,PORT:'0'},stdio:['ignore','pipe','pipe']});
+  t.after(()=>child.kill());
+  const origin=await new Promise((resolve,reject)=>{
+    const timer=setTimeout(()=>reject(new Error('Local server did not start')),10000);
+    child.once('error',error=>{clearTimeout(timer);reject(error);});
+    child.stdout.on('data',chunk=>{const match=String(chunk).match(/http:\/\/127\.0\.0\.1:\d+/);if(match){clearTimeout(timer);resolve(match[0]);}});
+  });
+  for(const route of ['/','/releases','/artists','/about','/contact','/demos','/artists/qa-artist','/releases/qa-release','/admin']){
+    const response=await fetch(origin+route,{redirect:'manual'});
+    assert.equal(response.status,200,route);assert.match(response.headers.get('content-type'),/text\/html/);
+  }
+  for(const [old,clean] of [['/index.html','/'],['/index','/'],['/artists.html','/artists'],['/artists/qa-artist.html','/artists/qa-artist'],['/releases/qa-release.html','/releases/qa-release'],['/contact/','/contact'],['/admin/','/admin'],['/admin/index.html','/admin']]){
+    const response=await fetch(origin+old+'?from=saved%20link',{redirect:'manual'});
+    assert.equal(response.status,308,old);assert.equal(response.headers.get('location'),clean+'?from=saved%20link');
+  }
+  assert.equal((await fetch(origin+'/missing-page')).status,404);
+  assert.equal((await fetch(origin+'/missing-artist.html')).status,404);
+  const encodedSlashes=await fetch(origin+'/%2fexample.com.html',{redirect:'manual'});
+  assert.equal(encodedSlashes.status,308);assert.equal(encodedSlashes.headers.get('location'),'/example.com');
+  assert.equal((await fetch(origin+'/styles.css')).status,200);
+  const partial=await fetch(origin+'/assets/audio/qa-preview.wav',{headers:{Range:'bytes=0-43'}});
+  assert.equal(partial.status,206);assert.equal((await partial.arrayBuffer()).byteLength,44);
 });

@@ -2,7 +2,7 @@
 
 ## Acceso privado
 
-El panel está en https://world-wide-frequencies.vercel.app/admin/.
+El panel está en https://world-wide-frequencies.vercel.app/admin.
 El único administrador es `imagesoundandmedia@tutamail.com`. No hay registro público.
 
 La primera contraseña se elige mediante el archivo privado `.qa/ACTIVATE_ADMIN.html`, que contiene un enlace de activación de un solo uso. Ese archivo no está en GitHub ni se publica. La contraseña de acceso al panel es independiente de la contraseña de Postgres. Nunca publiques archivos de `.qa/`, tokens ni claves privadas.
@@ -23,6 +23,10 @@ El catálogo público se ordena por fecha de lanzamiento. El orden de artistas s
 En Configuración puedes editar el nombre, lema, presentación, contactos, redes, enlaces legales y lanzamiento destacado. Los botones de streaming aceptan cualquier plataforma mediante nombre y URL HTTP(S).
 
 Si hay un conflicto entre pestañas, el servidor rechaza la sobrescritura: conserva tus cambios y recarga la última versión antes de volver a guardar. Las versiones publicadas anteriores se pueden recuperar como borrador para revisarlas y publicarlas otra vez. Una publicación pendiente se puede reintentar desde Resumen sin crear otra versión.
+
+## Direcciones de las páginas
+
+Las direcciones públicas no llevan `.html`: por ejemplo, `/artists/w-francis`, `/releases/identificador` o `/contact`. La compilación mantiene los archivos HTML estáticos; Vercel y el servidor local los sirven con direcciones limpias. Las direcciones anteriores con `.html` redirigen permanentemente (308) a las nuevas, conservando los parámetros de consulta. Los enlaces internos, canonical y sitemap utilizan estas direcciones. El JSON público normaliza también `profileUrl`, incluso si una versión anterior del CMS conserva el enlace antiguo.
 
 ## Archivos y cuota
 
