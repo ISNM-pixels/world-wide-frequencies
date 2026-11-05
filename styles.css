@@ -1602,3 +1602,12 @@ input[type=range] {
     scroll-behavior:auto!important
   }
 }
+
+.institutional .container { padding-block: 80px; }
+.institutional h1 { margin: 20px 0; color: #fff; }
+.institutional p { color: #c5c9cb; }
+.institutional-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
+.support-heading { margin-top:32px; }
+@media(max-width:560px) { .institutional .container { padding-block:45px; } .institutional h1 { font-size:42px; } }
+
+.release-grid > .empty-note { grid-column:1 / -1; }

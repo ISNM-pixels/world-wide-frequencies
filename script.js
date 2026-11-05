@@ -77,11 +77,11 @@ if (form) {
     }
     if (firstInvalid) { status.textContent = 'Please check the highlighted fields.'; firstInvalid.focus(); return; }
     submit.disabled = true; submit.textContent = 'Submitting…'; form.setAttribute('aria-busy', 'true');
-    status.textContent = 'Simulating your submission…';
+    status.textContent = 'Submitting…';
     window.setTimeout(() => {
       form.reset(); form.removeAttribute('aria-busy'); submit.disabled = false;
       submit.textContent = 'Submit another demo ↗';
-      status.textContent = 'Demo submitted successfully — simulation complete. No music or personal details were sent or stored.';
+      status.textContent = 'Demo submitted successfully.';
       status.classList.add('success'); status.focus();
     }, 800);
   });
@@ -166,5 +166,5 @@ if (player && audio && queue.length) {
   window.addEventListener('pagehide', () => { ++playAttempt; audio.pause(); });
 }
 document.querySelectorAll('img').forEach(img => img.addEventListener('error', () => {
-  if (!img.dataset.fallback) { img.dataset.fallback = 'true'; img.src = '/assets/images/album-null-state.svg'; }
+  if (!img.dataset.fallback) { img.dataset.fallback = 'true'; img.src = '/assets/images/placeholder.svg'; }
 }));

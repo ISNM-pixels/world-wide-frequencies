@@ -5,7 +5,18 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "node scripts/build.mjs && node server.mjs",
-    "test": "node --test tests/*.test.mjs"
+    "test": "npm run build && node --test --test-concurrency=1 tests/*.test.mjs"
   },
-  "engines": { "node": ">=22" }
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.119.0"
+  },
+  "devDependencies": {
+    "@breezystack/lamejs": "1.2.7",
+    "esbuild": "0.28.2",
+    "happy-dom": "21.0.4",
+    "supabase": "3.0.0"
+  }
 }

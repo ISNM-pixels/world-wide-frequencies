@@ -1,83 +1,72 @@
-# World Wide Frequencies — content and publishing
+# World Wide Frequencies — administración
 
-## Run and publish
+## Acceso privado
 
-Requires Node.js 22 or later. No dependencies or installation needed.
+El panel está en https://world-wide-frequencies.vercel.app/admin/.
+El único administrador es `imagesoundandmedia@tutamail.com`. No hay registro público.
+
+La primera contraseña se elige mediante el archivo privado `.qa/ACTIVATE_ADMIN.html`, que contiene un enlace de activación de un solo uso. Ese archivo no está en GitHub ni se publica. La contraseña de acceso al panel es independiente de la contraseña de Postgres. Nunca publiques archivos de `.qa/`, tokens ni claves privadas.
+
+Las sesiones se conservan solo en la pestaña del navegador. Cierra sesión cuando termines. La recuperación de cuenta es asistida desde la cuenta propietaria de Supabase; no se ha contratado SMTP.
+
+## Editar y publicar
+
+1. Entra en Artistas o Lanzamientos y crea o selecciona una entrada.
+2. Completa los datos. Los nombres pueden cambiar sin modificar sus direcciones públicas; los identificadores son estables.
+3. Añade fotografías, portadas y fragmentos desde la propia ficha. Los archivos quedan en la biblioteca privada.
+4. Pulsa **Guardar borrador**. Esto no modifica la web pública.
+5. Revisa **Vista previa** y pulsa **Publicar** cuando esté listo.
+6. El panel confirma la publicación únicamente cuando encuentra esa revisión en el dominio de producción.
+
+El catálogo público se ordena por fecha de lanzamiento. El orden de artistas sí sigue el orden elegido en el panel. La asociación de artistas alimenta automáticamente los perfiles y créditos. Antes de eliminar un artista, desasócialo de sus lanzamientos.
+
+En Configuración puedes editar el nombre, lema, presentación, contactos, redes, enlaces legales y lanzamiento destacado. Los botones de streaming aceptan cualquier plataforma mediante nombre y URL HTTP(S).
+
+Si hay un conflicto entre pestañas, el servidor rechaza la sobrescritura: conserva tus cambios y recarga la última versión antes de volver a guardar. Las versiones publicadas anteriores se pueden recuperar como borrador para revisarlas y publicarlas otra vez. Una publicación pendiente se puede reintentar desde Resumen sin crear otra versión.
+
+## Archivos y cuota
+
+- Imágenes de entrada: JPEG, PNG o WebP de hasta 15 MB. El navegador las convierte a WebP de hasta 1600 píxeles y 500 KB antes de subirlas. No se guarda el original.
+- Audio: fragmentos MP3 ya preparados, de hasta 30 segundos y 2 MB. La duración completa de la canción se introduce aparte.
+- Límite interno de biblioteca: 50 MB. Los archivos idénticos se reutilizan mediante su checksum.
+- Biblioteca: puedes eliminar archivos que no use el borrador ni las versiones conservadas.
+- Se conservan la versión publicada y hasta dos versiones anteriores. No hay crons, Realtime ni keep-alive.
+
+Supabase guarda el contenido administrativo y los archivos fuente privados. Durante una publicación Vercel descarga los archivos seleccionados, verifica sus checksums y los incorpora al sitio estático. Los visitantes leen páginas, imágenes y audio desde Vercel: no consultan Supabase ni necesitan cuenta.
+
+Si Supabase pausa el proyecto gratuito, será necesario reanudarlo para administrar o publicar. La última versión desplegada en Vercel sigue disponible. El tráfico público de Vercel sigue sujeto a los límites de su propio plan.
+
+## Conexión inicial de publicación
+
+Proyecto Supabase exclusivo: **World Wide Frequencies**, ref `slnrpuaqjdvrodahgzbr`, Frankfurt, organización `vercel_icfg_rHIdnQtHgRSRWYgyXExSGwg3`.
+
+1. En el proyecto Vercel existente, crea una variable **WWF_BUILD_TOKEN** para Production con el valor del archivo privado `.qa/VERCEL_BUILD_TOKEN.txt`. No uses prefijos públicos como `NEXT_PUBLIC_`.
+2. Crea un Deploy Hook en Settings → Git para la rama `main` del repositorio `ISNM-pixels/world-wide-frequencies`.
+3. En el panel de la web, Configuración → Conexión inicial con Vercel, introduce el Deploy Hook y pulsa **Conectar publicación**. El hook se guarda únicamente en el servidor, nunca vuelve al navegador.
+4. Publica y comprueba la revisión en `/publication.json` y el estado del panel.
+
+Una vez conectado el hook, las compilaciones de Vercel fallan de forma segura si falta el token: nunca sustituyen el catálogo gestionado por el JSON inicial del repositorio. Hasta completar esta conexión se admite un despliegue inicial desde el contenido local vacío, pero el botón Publicar muestra que la conexión está pendiente.
+
+La integración opcional de GitHub dentro de Supabase no es necesaria para administrar el contenido ni publicar la web. Las migraciones y las funciones están versionadas en este repositorio. No habilites ramas Supabase ni extras de pago sin revisar su coste.
+
+## Desarrollo y seguridad
+
+Node 22 o posterior. Dependencias fijadas con lockfile.
 
 ```text
+npm ci
 npm run dev
+npm test
 ```
 
-Open http://127.0.0.1:5173/. After editing content or templates, run `npm run build` and reload. The server serves `dist/`, never the source checkout. `npm test` verifies generated routes, metadata, links, media and the preview/form behavior.
+El servidor local sirve únicamente `dist/`. Después de editar, ejecuta `npm run build` y recarga. Las pruebas unitarias usan catálogos y sesiones ficticias; las pruebas reales de integración son una operación puntual, con material privado temporal retirado al terminar.
 
-Vercel builds `main` with `npm run build` and publishes `dist/`. The existing production URL is https://world-wide-frequencies.vercel.app/. Commit and push validated source changes to deploy. Generated HTML is ignored by Git: never edit `dist/` directly. The former root and artist HTML files are now generated at the same public addresses.
+`data/content.json` es el contenido inicial y el respaldo para desarrollo. Después de conectar el CMS, el borrador de Supabase es la fuente de edición y cada publicación es una copia inmutable. No edites `dist/`.
 
-## Edit content
+La función `wwf-admin` comprueba cada token de administrador con Supabase Auth y verifica su UUID contra la cuenta autorizada. El gateway JWT está desactivado porque el código valida las credenciales apropiadas para cada ruta: sesión para administrar, token privado para compilaciones y token de activación de un solo uso. Las tablas tienen RLS y no conceden acceso directo a `anon` ni `authenticated`. La clave privilegiada solo existe en el entorno de la Edge Function.
 
-`data/content.json` is the source of truth. `scripts/build.mjs` contains the shared layouts and page templates. `styles.css` handles presentation; `script.js` handles filters, demos and audio. The build produces all artist and release pages, metadata, sitemap and 404.
+No guardes contraseñas de Postgres en migraciones. Todos los cambios remotos de esta implementación se restringen a `slnrpuaqjdvrodahgzbr`; el proyecto MPP está fuera del alcance.
 
-### Releases
+## Demo Drop
 
-Add an object to `albums` with a unique lowercase hyphenated `id`, `title`, display `artist`, `type` (`album`, `single`, `ep`), `label`, `status`, ISO `releaseDate`, `cover`, `coverAlt`, `artistIds`, `platforms` and `tracks`. The build creates `/releases/<id>.html`. Set `site.featuredReleaseId` to select the homepage feature; otherwise the latest release is used. The home grid uses release date order.
-
-Each track needs a unique `id` within that release, `title`, full-song `duration` (e.g. `4:23`), and `previewUrl` (empty until available).
-
-`artist` is the displayed credit. Set `artistIds` to known roster IDs to link credits and show the release on their profiles. Keep it empty when there is no confirmed relationship. The existing six releases and seven artists remain provisional; no relationships were inferred.
-
-### Add your previews
-
-Prepare the exact excerpt you want listeners to hear (approximately 25 seconds) and place it in `assets/audio/`. Use lowercase filenames. MP3 is recommended; WAV, OGG and M4A are also supported. A public HTTPS audio URL is also accepted.
-
-```json
-{
-  "id": "synaptic-echoes",
-  "title": "Synaptic Echoes",
-  "duration": "4:23",
-  "previewUrl": "assets/audio/synaptic-echoes-preview.mp3"
-}
-```
-
-The player plays the entire excerpt file. It does not cut a full song or enforce a 25-second limit. Its timer reports the actual audio duration, independently of the full track time. Missing previews display “Preview coming soon”. No preview files are included with the provisional catalog. Do not commit QA audio fixtures.
-
-One player is shared within each page. Playback begins only when a listener presses Preview; navigation stops it. Loading failures show an error and leave other previews available.
-
-### Streaming buttons
-
-In each release's `platforms`, add as many label/URL entries as needed:
-
-```json
-[
-  { "label": "Spotify", "url": "https://open.spotify.com/album/YOUR_ID" },
-  { "label": "Apple Music", "url": "https://music.apple.com/album/YOUR_ID" },
-  { "label": "Tidal", "url": "https://tidal.com/album/YOUR_ID" },
-  { "label": "Amazon Music", "url": "https://music.amazon.com/albums/YOUR_ID" }
-]
-```
-
-Use actual release URLs. These examples are instructions, not working links. Empty or non-HTTP(S) links are not rendered. New services need no template changes. Streaming links open in a new tab.
-
-### Artists
-
-Add an object to `artists` with unique `id`, `name`, `genre`, `description`, optional `image` and `imageAlt`, `joinedAt` and `links` (the same label/URL format). The build creates `/artists/<id>.html` automatically. `profileUrl` remains for compatibility but generated routes use the ID.
-
-Put photography in `assets/images/`. An empty image uses an initials placeholder; missing biography and links have honest pending states. Add confirmed releases through each release's `artistIds`.
-
-### Site and contact
-
-- `site.url`: production origin used for canonical and sitemap URLs.
-- `site.contact.email`: actual public enquiries email, empty until confirmed.
-- `site.socials`: real footer and contact links, using label/URL entries.
-- `site.legal`: published legal page links; placeholders are hidden. Add reviewed text and operator details before collecting real submissions.
-- `site.tagline`: footer text. Copyright year is generated automatically.
-
-## Demo Drop is a simulation
-
-`/demos.html` validates input and displays a simulated success message. No request, email, upload, analytics or browser storage is used by the form. Inputs are reset after success and on page restoration. A visible demo notice remains on the public page.
-
-Before accepting real submissions, choose a delivery/storage service, implement a server endpoint, rate limiting and spam controls, add the appropriate privacy information, and replace the simulation handler. Only show a real confirmation after the server acknowledges receipt. Never place credentials in content JSON or browser JavaScript.
-
-## Visual assets and checks
-
-Existing SVG covers are retained as provisional artwork. The shared 1200×630 social card is a PNG for sharing previews. Never use Spinnin’ artwork, names or logos as label content.
-
-Before deploying: build, run tests, inspect mobile/tablet/desktop views, test demos, test supplied audio, check platform links and verify the Vercel deployment status and production URL. Revert the release commit on main and push if a production rollback is needed.
+El formulario conserva la validación y muestra “Demo submitted successfully.”. No envía correos ni guarda datos; se han retirado los textos públicos de simulación a petición del propietario. Conectar una recepción real será un trabajo separado.

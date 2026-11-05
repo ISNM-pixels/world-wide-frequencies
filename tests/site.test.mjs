@@ -6,11 +6,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-execFileSync(process.execPath,['scripts/build.mjs'],{cwd:root});
+
 const dist = path.join(root,'dist');
 const data = JSON.parse(await readFile(path.join(root,'data/content.json'),'utf8'));
 async function files(dir){const list=[];for(const entry of await readdir(dir,{withFileTypes:true})){const name=path.join(dir,entry.name);if(entry.isDirectory())list.push(...await files(name));else list.push(name);}return list;}
-const htmlFiles=(await files(dist)).filter(f=>f.endsWith('.html'));
+const htmlFiles=(await files(dist)).filter(f=>f.endsWith('.html') && !f.includes(path.sep+'admin'+path.sep));
 
 test('all original routes and generated release routes exist with static content',async()=>{
   for(const route of ['index','artists','releases','contact','about','demos','404']) assert.ok((await stat(path.join(dist,route+'.html'))).isFile());
@@ -55,8 +55,10 @@ test('distribution excludes source, tests and QA files; sitemap covers public pa
 test('prepare isolated media fixtures and verify optional streaming/artist relationships',async()=>{
   const fixture=path.join(root,'.qa','source');
   await mkdir(fixture,{recursive:true});
-  for(const item of ['scripts','assets','styles.css','script.js'])await cp(path.join(root,item),path.join(fixture,item),{recursive:true});
+  for(const item of ['scripts','assets','styles.css','script.js','admin','lib','supabase'])await cp(path.join(root,item),path.join(fixture,item),{recursive:true});
   const clone=structuredClone(data);
+  clone.albums=[{id:'qa-release',title:'QA Release',artist:'QA Artist',type:'album',label:'LP',status:'Out Now',releaseDate:'2026-01-01',cover:'assets/images/placeholder.svg',coverAlt:'QA artwork',artistIds:[],platforms:[],tracks:[{id:'first',title:'First',duration:'4:00',previewUrl:''},{id:'second',title:'Second',duration:'3:00',previewUrl:''},{id:'third',title:'Third',duration:'2:00',previewUrl:''}]}];
+  clone.artists=[{id:'qa-artist',name:'QA Artist',genre:'Test',description:'',image:'',imageAlt:'',links:[]}];
   const media=path.join(fixture,'assets/audio');await mkdir(media,{recursive:true});
   function wav(seconds){const rate=8000,n=rate*seconds;const buffer=Buffer.alloc(44+n*2);buffer.write('RIFF');buffer.writeUInt32LE(buffer.length-8,4);buffer.write('WAVEfmt ',8);buffer.writeUInt32LE(16,16);buffer.writeUInt16LE(1,20);buffer.writeUInt16LE(1,22);buffer.writeUInt32LE(rate,24);buffer.writeUInt32LE(rate*2,28);buffer.writeUInt16LE(2,32);buffer.writeUInt16LE(16,34);buffer.write('data',36);buffer.writeUInt32LE(n*2,40);for(let i=0;i<n;i++)buffer.writeInt16LE(Math.round(1000*Math.sin(2*Math.PI*220*i/rate)),44+i*2);return buffer;}
   await writeFile(path.join(media,'qa-preview.wav'),wav(25));await writeFile(path.join(media,'qa-short.wav'),wav(2));
@@ -64,13 +66,13 @@ test('prepare isolated media fixtures and verify optional streaming/artist relat
   clone.albums[0].tracks[1].previewUrl='assets/audio/qa-short.wav';
   clone.albums[0].tracks[2].previewUrl='http://127.0.0.1:5174/missing-audio.wav';
   clone.albums[0].platforms=[{label:'Spotify',url:'https://open.spotify.com/'},{label:'Invalid',url:'javascript:alert(1)'},{label:'Tidal',url:'https://tidal.com/'}];
-  clone.albums[0].artistIds=['jeremy-blake'];
+  clone.albums[0].artistIds=['qa-artist'];
   await mkdir(path.join(fixture,'data'),{recursive:true});await writeFile(path.join(fixture,'data/content.json'),JSON.stringify(clone));
   execFileSync(process.execPath,['scripts/build.mjs'],{cwd:fixture});
-  const html=await readFile(path.join(fixture,'dist/releases/synaptic-echoes.html'),'utf8');
+  const html=await readFile(path.join(fixture,'dist/releases/qa-release.html'),'utf8');
   assert.equal([...html.matchAll(/data-preview="/g)].length,3);
   assert.match(html,/target="_blank" rel="noopener noreferrer">Spotify/);assert.doesNotMatch(html,/javascript:alert/);
-  assert.match(html,/href="\/artists\/jeremy-blake.html">Jeremy Blake/);
+  assert.match(html,/href="\/artists\/qa-artist.html">QA Artist/);
   const queue=JSON.parse(html.match(/id="preview-data" type="application\/json">(.*?)<\/script>/s)[1]);assert.equal(queue.length,3);
   // Browser QA uses this isolated output. Never copy fixture media to production dist.
   await cp(path.join(fixture,'dist'),path.join(root,'.qa/site'),{recursive:true});

@@ -1,0 +1,7 @@
+{
+  "url": "https://slnrpuaqjdvrodahgzbr.supabase.co",
+  "publishableKey": "sb_publishable_ly8kD-IXfupFJymt6DbjPA_33OYzDrY",
+  "functionName": "wwf-admin",
+  "productionUrl": "https://world-wide-frequencies.vercel.app",
+  "requireRemoteBuild": true
+}
